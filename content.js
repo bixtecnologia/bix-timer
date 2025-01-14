@@ -10,19 +10,25 @@ chrome.storage.local.get(['presentationTime', 'startTime'], ({ presentationTime,
     progressBar.style.backgroundColor = '#4caf50';
     progressBar.style.zIndex = '10000';
     document.body.appendChild(progressBar);
-    let startTimeFun=startTime;
-    
-    let endTime = startTimeFun + presentationTime * 1000;
+
+    startTimeFun=startTime;
+    let endTime = startTime + presentationTime * 1000;
   
     const updateProgressBar = () => {
 
-        chrome.storage.local.get(['restart'], ({restart}) =>{
+        chrome.storage.local.get(['restart'], async ({restart}) =>{
             if (restart){
                 console.log('restarted');
                 chrome.storage.local.set({ restart: false }, () => {
                 });
-                endTime =  Date.now() + presentationTime * 1000;
-                startTimeFun =  Date.now() ;
+                await chrome.storage.local.get(['presentationTime', 'startTime'], ({ presentationTime, startTimein }) => {
+                    endTime = Date.now() + presentationTime * 1000;
+                    startTimeFun=Date.now();
+                    
+ 
+                });
+
+
             }
 
         });
